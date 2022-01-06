@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      .continer{
+          width: 60%;
+          height: 640px;
+          margin: auto;
+          box-shadow:0px 0px 6px gray;
+      }
+      .taskDiv{
+          width: 100%;
+          /* background-color:#f44336; */
+          background-color: SaddleBrown ;
+          padding: 6px 32px 6px 32px;
+          box-sizing: border-box;
+      }
+      .taskDiv > input{
+          width: 60%;
+          border: none;
+          outline: none;
+          padding: 8px;
+          box-sizing: border-box;
+      }
+      .taskDiv > button{
+          width: 25%;
+          padding: 8px;
+          box-sizing: border-box;
+          border: none;
+          outline: none;
+          background: none;
+          cursor: pointer;
+          color: white;
+    
+      }
+      .taskDiv > select{
+          padding: 8px;
+          box-sizing: border-box;
+          border: none;
+          outline: none;
+          background: none;
+          background-color: #d9d9d9;
+          color: #555;
+          cursor: pointer;
+      }
+      ol{
+        
+          margin: 0px;
+          padding: 0px;
+      }
+      ol li{
+          
+          list-style: none;
+          background-color: #eee;
+           margin-bottom: 1px;
+           padding: 16px;
+           cursor: pointer;
+      }
+      ol li> span> small{
+          margin-right: 16px;
+      }
+      ol li> span button{
+        padding: 10px 16px 10px 16px;
+        margin: -10px;background-color: grey;
+        border: none;
+        cursor: pointer;
+        background: none;
+        color: black;
+      }
+      ol li> span button:hover{
+        background-color:black;
+        color: white; 
+      }
+      ol li:hover{
+        background-color:grey;
+        color: white; 
+      }
+    </style>
+
+    <script>
+        var task=[];
+        document.getElementById("NoTask").innerHTML="none";
+
+        function addTask(){
+            var mytask=document.getElementById("txtTask").value;
+            var add_top_end=document.getElementById("add_start_end").value;
+            if(mytask=="")
+            {
+                alert("Sorry you have enter nothing...!");
+                document.getElementById("txtTask").focus();
+             }
+            else
+            {
+              if(add_top_end=="start")
+                {
+                  task.unshift(mytask);
+                  document.getElementById("txtTask").value="";
+                  document.getElementById("txtTask").focus();
+                  display();
+                }
+                else
+                {
+                  task.push(mytask);
+                  document.getElementById("txtTask").value="";
+                  document.getElementById("txtTask").focus();
+                  display();
+                }
+            }
+            
+        }
+
+         function display(){
+            
+            var list="<ol>";
+                var date = new Date();
+                // get the date as a string
+                var currentDate = date.toDateString();
+               // get the time as a string
+                var currentTime = date.toLocaleTimeString();
+            for(var i=0;i<task.length;i++){
+                
+               list=list+"<li>"+task[i]+"<span style='float:right'><small>"+currentTime+" | "+currentDate+"</small><button onclick='deleteTaskSplice("+i+")'>"+"X"+"</button></span>"+"</li>";
+            }
+            list=list+"</ol>";
+            document.getElementById("p").innerHTML=list;
+
+            if(task.length==0){
+                document.getElementById("NoTask").style.display="block";
+                document.getElementById("p").style.display="none";
+              }else{
+                document.getElementById("NoTask").style.display="none";
+                document.getElementById("p").style.display="block";
+              }
+         }
+        function deleteTaskSplice(indx){
+            var perm=confirm("Are you sure to delete this task...?");
+             if(perm==true){
+            task.splice(indx,1);
+            display();
+             }
+             else{
+                document.getElementById("txtTask").focus();
+             }
+
+              
+        }
+         
+         function deleteTask(){
+             
+            var delete_top_end=document.getElementById("delete_start_end").value;
+            if(task.length==0){
+               alert("Opps your ToDoList is empty....");
+               document.getElementById("txtTask").focus();
+            }
+            else
+            {
+                var perm=confirm("Are you sure to delete this task...?");
+             if(perm==true){
+            if(delete_top_end=="start")
+                {
+                  task.shift();
+                  document.getElementById("txtTask").focus();
+                  display();
+                }
+                else
+                {
+                  task.pop();
+                  document.getElementById("txtTask").focus();
+                  display();
+                }
+             }else{
+                document.getElementById("txtTask").focus();
+             }
+            }
+             
+         }
+
+         function sortTask(){
+            var sort_asc_desc_both=document.getElementById("sort_asc_desc").value;
+            if(task.length==0){
+               alert("Opps your ToDoList is empty....");
+               document.getElementById("txtTask").focus();
+            }
+            else
+            {
+                if(sort_asc_desc_both=="Asc")
+                {
+                  task.sort();
+                  document.getElementById("txtTask").focus();
+                  display();
+                }
+                else
+                {
+                    task.sort();
+                    task.reverse();
+                  document.getElementById("txtTask").focus();
+                  display();
+                }
+            }
+         }
+    </script>
+</head>
+<body>
+    <div class="continer" id="continer">
+        <div class="taskDiv">
+		     <h1 style="font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;color:white;font-weight:bold">My To Do List</h1>
+            <input  placeholder="Add task here..." type="text"  style="border:1px solid green  " id="txtTask"/>
+
+            <!-- Add Task ToDo list code -->
+            <select id="add_start_end">
+                <option value="start">Add Start</option>
+                <option value="end">Add End</option>
+            </select>
+            <button onclick="addTask()" style="background-color:green  ">Add</button>
+            <hr>
+        </div>
+
+        <!-- Display task here -->
+        <p id="p" style="margin:0px;height: 445px;overflow-y: scroll"></p>
+        <div id="NoTask" style="margin:0px;height: 445px;text-align: center;padding: 155px;box-sizing: border-box;font-family:'Courier New', Courier, monospace;font-size: 30px">Your ToDoList is Empty<br>&<br>Task Will be Display Here...</div>
+        
+        
+        <div class="taskDiv" style="text-align:center;padding-top: 6px;margin-top: 4px;position: fixed;width: 59.4%;box-sizing: border-box">
+       
+
+         <!-- Deletion code -->
+         <select id="delete_start_end">
+            <option value="start">Delete Start</option>
+            <option value="end">Delete End</option>
+        </select>
+        <button onclick="deleteTask()" style="background-color:DarkRed  ">Delete</button>
+        <!-- Sorting code -->
+        <select id="sort_asc_desc">
+            <option value="Asc">Sort Asc</option>
+            <option value="Desc">Sort Desc</option>
+        </select>
+        <button onclick="sortTask()" style="background-color:Olive  ">Sort</button>
+        </div>
+            
+    </div>
+    <script>
+    
+    document.getElementById("p").style.display="none";
+    document.getElementById("txtTask").focus();
+
+
+    </script>
+</body>
+</html>
